@@ -73,7 +73,7 @@ class FindEntry(Resource):
         testDB.modifyEntry(entry, receiver)
         return
 
-class DeleteEntries(Resource):
+class DeleteUsers(Resource):
     def post(self):
         testDB.deleteUsers()
         return
