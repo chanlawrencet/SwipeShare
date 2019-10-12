@@ -60,7 +60,7 @@ def getUserSwipes(email):
         allGiving.append(ele)
     allReceivingC = list(mongo.db.entries.find({"receiver_email" : email}).sort('time', 1))
     allReceiving = []
-    for content in allReceiving:
+    for content in allReceivingC:
         ele = {
             'location': content['location'],
             'time': content['time']
