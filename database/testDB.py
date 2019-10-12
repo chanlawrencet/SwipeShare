@@ -59,7 +59,7 @@ def getUsers():
     return returnList
 
 def getEntries():
-    contents = list(mongo.db.entries.find())
+    contents = list(mongo.db.entries.find().sort('time', 1))
     returnList = []
     for content in contents:
         print(content)
