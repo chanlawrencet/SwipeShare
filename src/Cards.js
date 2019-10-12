@@ -30,9 +30,9 @@ class Cards extends React.Component{
     }
 
     requestCards = () => {
-        this.setState({
-            cards: []
-        });
+        // this.setState({
+        //     cards: []
+        // });
         var request = new Request('https://swipeshareapi.herokuapp.com/', {method:'GET'});
         fetch(request)
             .then(response => response.json())
@@ -188,7 +188,7 @@ class Cards extends React.Component{
 
     componentDidMount() {
         this.requestCards()
-        // setInterval(this.requestCards, 10000)
+        setInterval(this.requestCards, 10000)
     }
 
     render() {

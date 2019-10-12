@@ -59,6 +59,7 @@ class App extends React.Component{
             showLoginMessage: false,
             showInvalidMessage: false,
             showSuccessMessage: false,
+            showInvalidCode: false,
             showCodeField: true,
             showGiverForm: false,
             enteredDiningHall: ''
@@ -81,7 +82,12 @@ class App extends React.Component{
         const body = {
             email: enteredEmail
         };
-        fetch('https://swipeshareapi.herokuapp.com/sendcode', {method:'POST', body:JSON.stringify(body)})
+        fetch('https://swipeshareapi.herokuapp.com/sendcode',
+            {method:'POST',
+                body:JSON.stringify(body),
+                headers: {
+                'Content-Type': 'application/json'
+            }})
             .then(response => response.status)
             .then(status => {
                 if (status !== 200){
@@ -107,6 +113,38 @@ class App extends React.Component{
             });
             return false;
         }
+        const body = {
+            email: enteredEmail,
+            code: enteredCode
+        };
+        fetch('https://swipeshareapi.herokuapp.com/login',
+            {method:'POST',
+                body:JSON.stringify(body),
+                headers: {
+                    'Content-Type': 'application/json'
+                }})
+            .then(response => response.status)
+            .then(status => {
+                if (status === 200){
+                    this.setState({
+                        userEmail: enteredEmail,
+                        userVerified: true,
+                        showLogin: false,
+                        enteredEmail: '',
+                        enteredCode: ''
+                    });
+                    cookie.save('email', enteredEmail, { path: '/' })
+                    cookie.save('verified', true, { path: '/' })
+                } else {
+                    this.setState({
+                        enteredCode: '',
+                        showInvalidCode: true,
+                    })
+                }
+            }).catch(x => {
+            console.log('no data', x)
+            return('no data')
+        })
         console.log(enteredCode)
     };
 
@@ -175,7 +213,7 @@ class App extends React.Component{
     };
 
     render(){
-        const {userVerified, userEmail, enteredDate, showLogin, showLoginMessage, showInvalidMessage, showSuccessMessage, showGiverForm, enteredDiningHall} = this.state;
+        const {userVerified, userEmail, enteredDate, showLogin, showInvalidCode, showLoginMessage, showInvalidMessage, showSuccessMessage, showGiverForm, enteredDiningHall} = this.state;
         console.log(userVerified, userEmail)
         return (
             <div className="App">
@@ -189,16 +227,8 @@ class App extends React.Component{
                         cookie.remove('email', { path: '/' })
                         cookie.remove('verified', { path: '/' })
                     }}>Logout</Button>
-                </div> : null}
-                <Button onClick={() => {
-                    this.setState({
-                        userEmail: 'lawrence.chan@tufts.edu',
-                        userVerified: true
-                    })
-                    cookie.save('email', 'lawrence.chan@tufts.edu', { path: '/' })
-                    cookie.save('verified', true, { path: '/' })
-                }}>ADD COOKIE</Button>
-                <Button  variant='contained' onClick={() => this.setState({showLogin: !showLogin})}>login</Button>
+                </div> : <Button  variant='contained' onClick={() => this.setState({showLogin: !showLogin})}>login</Button>}
+
                 {showLogin ? this.loginWindow() : null}
                 <br/>
                 <br/>
@@ -264,7 +294,31 @@ class App extends React.Component{
                         <Button onClick={this.handleCloseGiverForm} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={this.handleCloseGiverForm} color="primary">
+                        <Button onClick={() => {
+                            const body = {
+                                giver_email: userEmail,
+                                receiver_email: '',
+                                location: enteredDiningHall,
+                                time: enteredDate
+                            };
+                            fetch('https://swipeshareapi.herokuapp.com/addentry',
+                                {method:'POST',
+                                    body:JSON.stringify(body),
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }})
+                                .then(response => response.status)
+                                .then(status => {
+                                    if (status === 200){
+                                        this.handleCloseGiverForm()
+                                    } else {
+                                        console.log('big bad')
+                                    }
+                                }).catch(x => {
+                                console.log('no data', x)
+                                return('no data')
+                            })
+                        }} color="primary">
                             Submit
                         </Button>
                     </DialogActions>
@@ -337,6 +391,30 @@ class App extends React.Component{
                             aria-label="close"
                             color="inherit"
                             onClick={() => this.setState({showLoginMessage: false})}
+                        >
+                            <CloseIcon />
+                        </IconButton>,
+                    ]}
+                />
+                <Snackbar
+                    variant="error"
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    open={showInvalidCode}
+                    onClose={() => this.setState({showInvalidCode: false})}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    autoHideDuration={6000}
+                    message={<span id="message-id">Invalid Code!</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="close"
+                            color="inherit"
+                            onClick={() => this.setState({showInvalidCode: false})}
                         >
                             <CloseIcon />
                         </IconButton>,
