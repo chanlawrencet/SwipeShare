@@ -169,7 +169,7 @@ class MySwipes extends React.Component{
         return (
             <div>
                 <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5 }} key='mToday2'>Giving:</div>
-                {givingL.length === 0 ? this.makeUnavailableFiltersCard('mToday2') : givingL}
+                {givingL.length === 0 ? this.makeUnavailableFiltersCard('mTodaym2') : givingL}
                 <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5}} key='mTom2'>Receiving</div>
                 {receivingL.length === 0 ? this.makeUnavailableFiltersCard('mTomorrow2') : receivingL}
             </div>
