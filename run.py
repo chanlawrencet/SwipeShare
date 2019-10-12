@@ -22,7 +22,10 @@ class LogIn(Resource):
 
 class SendCode(Resource):
     def post(self):
+        print("HERE")
+        print(request.json)
         email = request.json['email']
+        print(request.json)
         code = testDB.updateUser(email)
 
         message = Mail(

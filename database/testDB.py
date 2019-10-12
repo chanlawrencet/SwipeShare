@@ -17,9 +17,9 @@ def verify(email, code):
         correct_code = str(x['code'])
     print(correct_code)
     if (correct_code == str(code)):
-        return 200
+        return correct_code, 200
     else:
-        return 403
+        return code, 403
 
 def updateUser(email):
     code = random.randint(100000,999999)
