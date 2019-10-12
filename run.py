@@ -22,8 +22,6 @@ class LogIn(Resource):
 
 class SendCode(Resource):
     def post(self):
-        print("HERE")
-        print(request.json)
         email = request.json['email']
         print(request.json)
         code = testDB.updateUser(email)
@@ -61,7 +59,7 @@ class GetUserSwipes(Resource):
 
 class DeleteEntry(Resource):
     def post(self):
-        theID = request.json['id']
+        theID = request.json['email']
         testDB.removeByID(theID)
         return 
 

@@ -8,6 +8,7 @@ import CloseIcon from "@material-ui/icons/Close"
 import MySwipes from "./MySwipes";
 import Cards from './Cards'
 import cookie from 'react-cookies'
+import jumbo from './jumbo.gif'
 
 class App extends React.Component{
     constructor(props){
@@ -184,19 +185,25 @@ class App extends React.Component{
         console.log(userVerified, userEmail)
         return (
             <div className="App">
-                <div style={{fontSize:50, marginTop:10}}>Swipe Share</div>
-                <div style={{fontSize:20}}>A way to share your mealswipes!</div>
+                <div>
+                    <span style={{fontSize:75, marginTop:10, fontFamily: 'Darker Grotesque'}}>Swipe Share</span>
+                    <img style={{marginLeft: 7, marginTop: 5, width:100}} src={jumbo}/>
+                    <div style={{fontSize:20}}>An easy way to share your meal swipes!</div>
+                </div>
                 <br/>
                 {userEmail && userVerified ? <div>
-                    <div>Logged in as {userEmail}.</div>
-                    <Button onClick={() => {
-                        this.setState({showHome: !showHome})
-                    }}>{!showHome ?' Go Home' : 'My Swipes'}</Button>
-                    <Button onClick={() => {
+                    <span>Logged in as {userEmail}. </span>
+                    <span style={{ cursor: 'pointer', textDecoration: 'underline'}} onClick={() => {
                         this.setState({userEmail: '', userVerified: false})
                         cookie.remove('email', { path: '/' })
                         cookie.remove('verified', { path: '/' })
-                    }}>Logout</Button>
+                        window.location.reload();
+                    }}>logout?</span>
+                    <br/>
+                    <br/>
+                    <Button variant='contained' color={showHome ? 'primary' : 'secondary'} onClick={() => {
+                        this.setState({showHome: !showHome})
+                    }}>{!showHome ?' Go Home' : 'My Swipes'}</Button>
                 </div> : <Button  variant='contained' onClick={() => this.setState({showLogin: !showLogin})}>login</Button>}
 
                 {showLogin ? this.loginWindow() : null}

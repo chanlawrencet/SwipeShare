@@ -171,11 +171,11 @@ class Cards extends React.Component{
 
         return (
             <div>
-                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5 }} key='mToday'>Meal swipes today</div>
+                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5 }} key='mToday'>Swipes available today</div>
                 {today.length === 0 ? this.makeUnavailableFiltersCard('mTodayc') : today}
-                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5}} key='mTom'>Meal swipes tomorrow</div>
+                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5}} key='mTom'>Swipes available tomorrow</div>
                 {tomorrow.length === 0 ? this.makeUnavailableFiltersCard('mTomorrowc') : tomorrow}
-                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5}} key='mBeyond'>Meal swipes beyond</div>
+                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5}} key='mBeyond'>Swipes available beyond</div>
                 {rest.length === 0 ? this.makeUnavailableFiltersCard('mRest') : rest}
             </div>
         )

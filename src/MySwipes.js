@@ -216,14 +216,6 @@ class MySwipes extends React.Component{
         const {userVerified} = this.props
         return(
             <div style={{marginLeft:'15%', marginRight: '15%'}}>
-                <Button  variant='contained' onClick={() => {
-                    if (!userVerified){
-                        console.log("NOT ALLOWED");
-                        this.setState({showLoginMessage: true});
-                        return;
-                    }
-                    this.setState({showGiverForm: true}
-                    )}}>Give a swipe</Button>
                 <br/>
                 <br/>
                 {this.showOptions()}
