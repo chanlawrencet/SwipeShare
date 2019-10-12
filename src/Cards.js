@@ -5,8 +5,29 @@ import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContentText from "@material-ui/core/DialogContentText";
+
+
 
 class Cards extends React.Component{
+
+    toPrettyTimeString = time => {
+        const theDate = new Date(time);
+        const timeString = theDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        let finalString = timeString;
+        if (timeString.charAt(0) === '0'){
+            finalString = timeString.slice(1);
+        }
+        return finalString
+    }
+
+    toPrettyLocationString = location => {
+        return location.charAt(0).toUpperCase() + location.slice(1)
+    }
 
     requestCards = () => {
         this.setState({
@@ -31,7 +52,10 @@ class Cards extends React.Component{
                 carmichael: true,
                 dewick: true,
                 hodgdon: true
-            }
+            },
+            selectedLocation: '',
+            selectedTime: null,
+            showConfirmation: false,
         }
 
     }
@@ -60,23 +84,29 @@ class Cards extends React.Component{
     }
 
     makeCard(theCardInfo){
+        const {userVerified, userEmail, showLoginM} = this.props;
         const {location, time} = theCardInfo;
-        const theDate = new Date(time);
-        const timeString = theDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        let finalString = timeString;
-        if (timeString.charAt(0) === '0'){
-            finalString = timeString.slice(1);
-        }
         return(
             <Card key={location+time+Math.random()} style={{marginBottom:10}}>
                 <CardContent>
                     <Typography variant='h5' align='left' style={{marginLeft:'5%'}}>
-                        {location.charAt(0).toUpperCase() + location.slice(1) } - {finalString}
+                        {this.toPrettyLocationString(location)} - {this.toPrettyTimeString(time)}
                     </Typography>
                 </CardContent>
                 <div>
                     <CardActions align='right' style={{justifyContent: 'flex-end'}}>
-                        <Button size="medium" >Request Meal</Button>
+                        <Button size="medium" onClick={() => {
+                            if (userVerified && userEmail !== ''){
+                                console.log('good')
+                                this.setState({
+                                    selectedLocation: location,
+                                    selectedTime: time,
+                                    showConfirmation: true
+                                })
+                            } else {
+                                showLoginM()
+                            }
+                        }}>Request Meal</Button>
                     </CardActions>
                 </div>
 
@@ -162,11 +192,39 @@ class Cards extends React.Component{
     }
 
     render() {
-        const {cards} = this.state;
+        const {cards, showConfirmation, selectedLocation, selectedTime} = this.state;
+        console.log(this.props)
+
         return(
             <div style={{marginLeft:'15%', marginRight: '15%'}}>
+                <div style={{fontSize:30, textAlign:'left', marginBottom:10}}>Available Meal Swipes:</div>
                 {this.showOptions()}
+                <br/>
                 {cards.length === 0 ? this.makeUnavailableCard() : this.cards()}
+                <Dialog
+                    open={showConfirmation}
+                    onClose={() => this.setState({showConfirmation: false})}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">Please confirm your request</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            You're agreeing to a meal at {this.toPrettyLocationString(selectedLocation)} at {this.toPrettyTimeString(selectedTime)}
+                        </DialogContentText>
+                        <DialogContentText id="alert-dialog-description2">
+                            You will receive an email alert as a reminder.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => this.setState({showConfirmation: false})} color="primary">
+                            Back
+                        </Button>
+                        <Button onClick={() => this.setState({showConfirmation: false})} color="primary" autoFocus>
+                            Confirm
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         )
     }

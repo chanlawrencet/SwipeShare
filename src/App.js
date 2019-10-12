@@ -28,8 +28,8 @@ class App extends React.Component{
         super(props);
         this.state = {
             hello: 'world',
-            userEmail: cookie.load('email'),
-            userVerified: cookie.load('verified'),
+            userEmail: cookie.load('email') ?  cookie.load('email') : '',
+            userVerified: cookie.load('verified') ? cookie.load('verified') : false,
             cards: [
                 {
                     location: 'carmichael',
@@ -149,12 +149,20 @@ class App extends React.Component{
         )
     }
 
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     this.setState({
+    //         userEmail: cookie.load('email') ?  cookie.load('email') : '',
+    //         userVerified: cookie.load('verified') ? cookie.load('verified') : false,
+    //     })
+    // }
+
     handleCloseGiverForm = () => {
         this.setState({showGiverForm: false})
     };
 
     render(){
         const {userVerified, userEmail, enteredDate, showLogin, showLoginMessage, showInvalidMessage, showSuccessMessage, showGiverForm, enteredDiningHall} = this.state;
+        console.log(userVerified, userEmail)
         return (
             <div className="App">
                 <div style={{fontSize:50, marginTop:10}}>Swipe Share</div>
@@ -163,11 +171,19 @@ class App extends React.Component{
                 {userEmail ? <div>
                     <div>Logged in as {userEmail}.</div>
                     <Button onClick={() => {
-                        this.setState({userEmail: null})
+                        this.setState({userEmail: '', userVerified: false})
                         cookie.remove('email', { path: '/' })
                         cookie.remove('verified', { path: '/' })
                     }}>Logout</Button>
                 </div> : null}
+                <Button onClick={() => {
+                    this.setState({
+                        userEmail: 'lawrence.chan@tufts.edu',
+                        userVerified: true
+                    })
+                    cookie.save('email', 'lawrence.chan@tufts.edu', { path: '/' })
+                    cookie.save('verified', true, { path: '/' })
+                }}>ADD COOKIE</Button>
                 <Button  variant='contained' onClick={() => this.setState({showLogin: !showLogin})}>login</Button>
                 {showLogin ? this.loginWindow() : null}
                 <br/>
@@ -182,9 +198,7 @@ class App extends React.Component{
                     )}}>Give a swipe</Button>
                 <br/>
                 <br/>
-
-                <div style={{fontSize:30, textAlign:'left', marginLeft:'15%', marginBottom:10}}>Available Meal Swipes:</div>
-                <Cards/>
+                <Cards userVerified={userVerified} userEmail={userEmail} showLoginM={() => this.setState({showLoginMessage: true})}/>
                 <Dialog fullWidth open={showGiverForm} onClose={this.handleCloseGiverForm} aria-labelledby="form-dialog-title">
                     <DialogTitle style={{fontSize: 100}} id="form-dialog-title">Give a mealswipe!</DialogTitle>
                     <DialogContent>
