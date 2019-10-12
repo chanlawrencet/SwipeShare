@@ -36,10 +36,11 @@ class SendCode(Resource):
             print(response.status_code)
             print(response.body)
             print(response.headers)
+            return 200
         except Exception as e:
             print(e.message)
     
-        return
+        return 403
 
 class GetUsers(Resource):
     def get(self):
