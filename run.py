@@ -1,17 +1,20 @@
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse, abort
+from flask_mail import Mail
+from flask_mail import Message
+from flask_cors import CORS
 from database import testDB
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+import os
 import json
 
 app = Flask(__name__)
+app.debug = True
 api = Api(app)
-parser = reqparse.RequestParser()
-parser.add_argument('first', type=str)
-parser.add_argument('last', type=str)
-parser.add_argument('email', type=str)
-parser.add_argument('date', type=str)
-parser.add_argument('time', type=str)
-parser.add_argument('location', type=str)
+CORS(app)
+
+mail = Mail(app)
 
 # look I'm a comment
 
@@ -56,11 +59,30 @@ class DeleteEntries(Resource):
         testDB.deleteEntries()
         return
 
+class SendEmail(Resource):
+    def get(self):
+        message = Mail(
+            from_email='toni.imonaco@tufts.edu',
+            to_emails='lulu.zheng@tufts.edu',
+            subject='Important Update',
+            html_content='I am so sorry to inform you that there has been another incident of hate crime')
+        try:
+            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+        except Exception as e:
+            print(e.message)
+    
+        return
+
 api.add_resource(GetEntries, '/')
 api.add_resource(AddUser, '/adduser')
 api.add_resource(AddEntry, '/addentry')
 api.add_resource(FindEntry, '/findentry')
 api.add_resource(DeleteEntries, '/deleteentries')
+api.add_resource(SendEmail, '/sendemail')
 
 if __name__ == '__main__':
     app.run(debug=True)
