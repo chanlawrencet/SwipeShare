@@ -78,6 +78,20 @@ class App extends React.Component{
             });
             return false;
         }
+        const body = {
+            email: enteredEmail
+        };
+        fetch('https://swipeshareapi.herokuapp.com/sendcode', {method:'POST', body:JSON.stringify(body)})
+            .then(response => response.status)
+            .then(status => {
+                if (status !== 200){
+                    console.log('big bad')
+                }
+            }).catch(x => {
+            console.log('no data', x)
+            return('no data')
+        })
+
         const success = true;
         if (success){
             this.setState({showCodeField:true, enteredCode: ''})
