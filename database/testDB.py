@@ -8,8 +8,6 @@ app.config["MONGO_URI"] = MONGO_URL
 # app.config["MONGO_URI"] = 'mongodb://localhost:27017/testDB'
 mongo = PyMongo(app)
 
-
-
 def addUser(new_user):
     users = mongo.db.users
     users.insert_one(new_user)
