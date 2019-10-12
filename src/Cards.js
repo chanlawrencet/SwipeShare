@@ -85,7 +85,6 @@ class Cards extends React.Component{
     makeCard(theCardInfo){
         const {userVerified, userEmail, showLoginM} = this.props;
         const {location, time, id} = theCardInfo;
-        console.log('location', location)
         return(
             <Card key={id} style={{marginBottom:10}}>
                 <CardContent>
