@@ -59,6 +59,12 @@ class GetUserSwipes(Resource):
         }
         return toReturn
 
+class DeleteEntry(Resource):
+    def post(self):
+        theID = request.json['id']
+        testDB.removeByID(theID)
+        return 
+
 class GetEntries(Resource):
     def get(self):
         return {'entries': testDB.getEntries()}
@@ -108,6 +114,7 @@ api.add_resource(GetUsers, '/getusers')
 api.add_resource(GetUserSwipes, '/getuserswipes')
 api.add_resource(GetEntries, '/')
 api.add_resource(AddEntry, '/addentry')
+api.add_resource(DeleteEntry, '/deleteentry')
 api.add_resource(MakeRequest, '/makerequest')
 api.add_resource(FindEntry, '/findentry')
 api.add_resource(DeleteUsers, '/deleteusers')

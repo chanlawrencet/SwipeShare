@@ -10,6 +10,11 @@ app.config["MONGO_URI"] = MONGO_URL
 # app.config["MONGO_URI"] = 'mongodb://localhost:27017/testDB'
 mongo = PyMongo(app)
 
+
+def removeByID(targetID):
+    mongo.db.entries.delete_one({"_id": ObjectId(str(targetID))})
+    return
+    
 def makeRequest(targetID, email):
     print('email:')
     writeR = mongo.db.entries.update({"_id": ObjectId(str(targetID))}, {'$set': {"receiver_email" : str(email)}})
