@@ -27,7 +27,7 @@ import Grid from "@material-ui/core/Grid";
 // https://codewithhugo.com/add-date-days-js/
 // https://stackoverflow.com/questions/43855166/how-to-tell-if-two-dates-are-in-the-same-day
 
-class Cards extends React.Component{
+class MySwipes extends React.Component{
 
     toPrettyTimeString = time => {
         const theDate = new Date(time);
@@ -46,8 +46,16 @@ class Cards extends React.Component{
 
 
     requestCards = () => {
-        var request = new Request('https://swipeshareapi.herokuapp.com/', {method:'GET'});
-        fetch(request)
+        const {userEmail} = this.props;
+        const body = {
+            userEmail: userEmail
+        };
+        fetch('https://swipeshareapi.herokuapp.com/getuser',
+            {method:'POST',
+                body:JSON.stringify(body),
+                headers: {
+                    'Content-Type': 'application/json'
+                }})
             .then(response => response.json())
             .then(data => {
                 this.setState({cards: data.entries})
@@ -412,4 +420,4 @@ class Cards extends React.Component{
     }
 }
 
-export default Cards;
+export default MySwipes;

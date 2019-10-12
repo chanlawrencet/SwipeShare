@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close"
+import MySwipes from "./MySwipes";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -38,7 +39,8 @@ class App extends React.Component{
             showSuccessMessage: false,
             showInvalidCode: false,
             showCodeField: true,
-            enteredDiningHall: ''
+            enteredDiningHall: '',
+            showHome: true
         };
     }
 
@@ -193,15 +195,18 @@ class App extends React.Component{
     };
 
     render(){
-        const {userVerified, userEmail, enteredDate, showLogin, showInvalidCode, showLoginMessage, showInvalidMessage, showSuccessMessage, showGiverForm, enteredDiningHall} = this.state;
+        const {userVerified, userEmail, showHome, showLogin, showInvalidCode, showLoginMessage, showInvalidMessage, showSuccessMessage, showGiverForm, enteredDiningHall} = this.state;
         console.log(userVerified, userEmail)
         return (
             <div className="App">
                 <div style={{fontSize:50, marginTop:10}}>Swipe Share</div>
                 <div style={{fontSize:20}}>A way to share your mealswipes!</div>
                 <br/>
-                {userEmail ? <div>
+                {userEmail && userVerified ? <div>
                     <div>Logged in as {userEmail}.</div>
+                    <Button onClick={() => {
+                        this.setState({showHome: !showHome})
+                    }}>{!showHome ?' Go Home' : 'My Swipes'}</Button>
                     <Button onClick={() => {
                         this.setState({userEmail: '', userVerified: false})
                         cookie.remove('email', { path: '/' })
@@ -212,7 +217,11 @@ class App extends React.Component{
                 {showLogin ? this.loginWindow() : null}
                 <br/>
                 <br/>
-                <Cards userVerified={userVerified} userEmail={userEmail} showLoginM={() => this.setState({showLoginMessage: true})}/>
+                {showHome?
+                    <Cards userVerified={userVerified} userEmail={userEmail} showLoginM={() => this.setState({showLoginMessage: true})}/> :
+                    <MySwipes userVerified={userVerified} userEmail={userEmail} showLoginM={() => this.setState({showLoginMessage: true})}/>
+                }
+
                 <Snackbar
                     variant="error"
                     anchorOrigin={{
