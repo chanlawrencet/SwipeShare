@@ -30,38 +30,14 @@ class App extends React.Component{
             hello: 'world',
             userEmail: cookie.load('email') ?  cookie.load('email') : '',
             userVerified: cookie.load('verified') ? cookie.load('verified') : false,
-            cards: [
-                {
-                    location: 'carmichael',
-                    time: '10pm'
-                },
-                {
-                    location: 'carmichael',
-                    time: '10pm'
-                },
-                {
-                    location: 'carmichael',
-                    time: '10pm'
-                },
-                {
-                    location: 'carmichael',
-                    time: '10pm'
-                },
-                {
-                    location: 'hodgdon',
-                    time: '10pm'
-                }
-            ],
+            cards: [],
             showLogin: false,
             enteredEmail: '',
             enteredCode: '',
-            enteredDate: new Date(),
-            showLoginMessage: false,
             showInvalidMessage: false,
             showSuccessMessage: false,
             showInvalidCode: false,
             showCodeField: true,
-            showGiverForm: false,
             enteredDiningHall: ''
         };
     }
@@ -236,96 +212,9 @@ class App extends React.Component{
                 {showLogin ? this.loginWindow() : null}
                 <br/>
                 <br/>
-                <Button  variant='contained' onClick={() => {
-                    if (!userVerified){
-                        console.log("NOT ALLOWED");
-                        this.setState({showLoginMessage: true});
-                        return;
-                    }
-                    this.setState({showGiverForm: true}
-                    )}}>Give a swipe</Button>
                 <br/>
                 <br/>
                 <Cards userVerified={userVerified} userEmail={userEmail} showLoginM={() => this.setState({showLoginMessage: true})}/>
-                <Dialog fullWidth open={showGiverForm} onClose={this.handleCloseGiverForm} aria-labelledby="form-dialog-title">
-                    <DialogTitle style={{fontSize: 100}} id="form-dialog-title">Give a mealswipe!</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please enter the information below:
-                        </DialogContentText>
-                        <InputLabel>Dining Hall</InputLabel>
-                        <Select
-                            style={{width:200}}
-                            value={enteredDiningHall}
-                            onChange={e => this.setState({enteredDiningHall: e.target.value})}
-                        >
-                            <MenuItem value='carmichael'>Carmichael</MenuItem>
-                            <MenuItem value='dewick'>Dewick</MenuItem>
-                            <MenuItem value='hodgdon'>Hodgdon</MenuItem>
-                        </Select>
-                    </DialogContent>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justify="space-around">
-                            <KeyboardDatePicker
-                                style={{fontsize: 20}}
-                                disableToolbar
-                                disablePast
-                                variant="inline"
-                                format="MM/dd/yyyy"
-                                margin="normal"
-                                id="date-picker-inline"
-                                label="Date"
-                                value={enteredDate}
-                                onChange={newDate => this.setState({enteredDate: newDate})}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                            />
-                            <br/>
-                            <KeyboardTimePicker
-                                margin="normal"
-                                id="time-picker"
-                                label="Time"
-                                value={enteredDate}
-                                onChange={newDate => this.setState({enteredDate: newDate})}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change time',
-                                }}
-                            />
-                        </Grid>
-                    </MuiPickersUtilsProvider>
-                    <DialogActions>
-                        <Button onClick={this.handleCloseGiverForm} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={() => {
-                            const body = {
-                                giver_email: userEmail,
-                                location: enteredDiningHall,
-                                time: enteredDate
-                            };
-                            fetch('https://swipeshareapi.herokuapp.com/addentry',
-                                {method:'POST',
-                                    body:JSON.stringify(body),
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    }})
-                                .then(response => response.status)
-                                .then(status => {
-                                    if (status === 200){
-                                        this.handleCloseGiverForm()
-                                    } else {
-                                        console.log('big bad')
-                                    }
-                                }).catch(x => {
-                                console.log('no data', x)
-                                return('no data')
-                            })
-                        }} color="primary">
-                            Submit
-                        </Button>
-                    </DialogActions>
-                </Dialog>
                 <Snackbar
                     variant="error"
                     anchorOrigin={{
