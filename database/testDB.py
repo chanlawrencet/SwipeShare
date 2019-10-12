@@ -10,7 +10,7 @@ app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 
 def makeRequest(targetID, email):
-    writeR = mongo.db.entries.update({"_id": targetID}, {$set: {"receiver_email" : str(email)}})
+    writeR = mongo.db.entries.update({"_id": targetID}, {'$set': {"receiver_email" : str(email)}})
     if (writeR.nMatched == 1):
         return "200", 200
     else:
