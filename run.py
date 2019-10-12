@@ -71,11 +71,11 @@ class SendEmail(Resource):
         return
 
 api.add_resource(GetEntries, '/')
-# api.add_resource(AddUser, '/adduser')
-# api.add_resource(AddEntry, '/addentry')
-# api.add_resource(FindEntry, '/findentry')
-# api.add_resource(DeleteEntries, '/deleteentries')
-# api.add_resource(SendEmail, '/sendemail')
+api.add_resource(AddUser, '/adduser')
+api.add_resource(AddEntry, '/addentry')
+api.add_resource(FindEntry, '/findentry')
+api.add_resource(DeleteEntries, '/deleteentries')
+api.add_resource(SendEmail, '/sendemail')
 
 if __name__ == '__main__':
     app.run()
