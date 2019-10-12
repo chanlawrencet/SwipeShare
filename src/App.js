@@ -155,6 +155,10 @@ class App extends React.Component{
 
     loginWindow(){
         const {enteredEmail, enteredCode, showCodeField} = this.state
+        console.log(window.innerWidth)
+        const targetWidth = window.innerWidth < 500 ? 300 : 450;
+        const dontHaveCodePad = window.innerWidth < 500 ? 170 : 320;
+        const haveCodeAlreadyPad = window.innerWidth < 500 ? 150 : 300;
         return(
             <div>
                 <TextField
@@ -166,7 +170,7 @@ class App extends React.Component{
                     autoComplete="email"
                     margin="normal"
                     variant="outlined"
-                    style={{width: 450}}
+                    style={{width: targetWidth}}
                     value={enteredEmail}
                     onChange={e => this.setState({enteredEmail: e.target.value, showInvalidMessage: false})}
                 />
@@ -180,18 +184,18 @@ class App extends React.Component{
                             name="code"
                             margin="normal"
                             variant="outlined"
-                            style={{width: 450}}
+                            style={{width: targetWidth}}
                             value={enteredCode}
                             onChange={e => this.setState({enteredCode: e.target.value})}
                         />
 
-                        <div style={{marginLeft:320,  cursor: 'pointer', textDecoration: 'underline'}} onClick={() => this.setState({showCodeField: false})}>Don't have a code?</div>
+                        <div style={{marginBottom: 10, marginLeft:dontHaveCodePad,  cursor: 'pointer', textDecoration: 'underline'}} onClick={() => this.setState({showCodeField: false})}>Don't have a code?</div>
                     </div>
                 ) : null}
                 {showCodeField ?
                     <Button type='submit' variant='contained' onClick={this.submitCode}>submit</Button> :
                     <div>
-                        <div style={{marginLeft:300,  cursor: 'pointer', textDecoration: 'underline'}} onClick={() => this.setState({showCodeField: true})}>Have a code already?</div>
+                        <div style={{marginBottom: 10, marginLeft:haveCodeAlreadyPad,  cursor: 'pointer', textDecoration: 'underline'}} onClick={() => this.setState({showCodeField: true})}>Have a code already?</div>
                         <Button type='submit' variant='contained' onClick={this.submitEmail}>send code</Button>
                     </div>
 
@@ -297,7 +301,6 @@ class App extends React.Component{
                         <Button onClick={() => {
                             const body = {
                                 giver_email: userEmail,
-                                receiver_email: '',
                                 location: enteredDiningHall,
                                 time: enteredDate
                             };
