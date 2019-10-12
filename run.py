@@ -11,14 +11,39 @@ app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
-class AddUser(Resource):
+# Login(Resource) verifies user's code
+class LogIn(Resource):
     def post(self):
-        new_user = {
-            "email": request.json['email'],
-        }
+        return testDB.verify(request.json['email'], request.json['code'])
 
-        testDB.addUser(new_user)
+# SendCode(Resource) sends a unique code to user
+#  user already exists == update the code
+#  user does not exist == add new user
+
+class SendCode(Resource):
+    def post(self):
+        email = request.json['email']
+        code = testDB.updateUser(email)
+
+        message = Mail(
+            from_email='swipesharetufts@gmail.com',
+            to_emails=str(email),
+            subject='Your Login Code for Swipe Share',
+            html_content='Here is your code: ' + str(code) + '<br>This is an automated message. Please do not reply to this email.</br>')
+        try:
+            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+        except Exception as e:
+            print(e.message)
+    
         return
+
+class GetUsers(Resource):
+    def get(self):
+        return {'users': testDB.getUsers()}
 
 class GetEntries(Resource):
     def get(self):
@@ -52,30 +77,13 @@ class DeleteEntries(Resource):
         testDB.deleteEntries()
         return
 
-class SendEmail(Resource):
-    def get(self):
-        message = Mail(
-            from_email='toni.imonaco@tufts.edu',
-            to_emails='lulu.zheng@tufts.edu',
-            subject='Important Update',
-            html_content='I am so sorry to inform you that there has been another incident of hate crime')
-        try:
-            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-            response = sg.send(message)
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
-        except Exception as e:
-            print(e.message)
-    
-        return
-
+api.add_resource(LogIn, '/login')
+api.add_resource(SendCode, '/sendcode')
+api.add_resource(GetUsers, '/getusers')
 api.add_resource(GetEntries, '/')
-api.add_resource(AddUser, '/adduser')
 api.add_resource(AddEntry, '/addentry')
 api.add_resource(FindEntry, '/findentry')
 api.add_resource(DeleteEntries, '/deleteentries')
-api.add_resource(SendEmail, '/sendemail')
 
 if __name__ == '__main__':
     app.run()
