@@ -48,9 +48,9 @@ class MySwipes extends React.Component{
     requestCards = () => {
         const {userEmail} = this.props;
         const body = {
-            userEmail: userEmail
+            email: userEmail
         };
-        fetch('https://swipeshareapi.herokuapp.com/getuser',
+        fetch('https://swipeshareapi.herokuapp.com/getuserswipes',
             {method:'POST',
                 body:JSON.stringify(body),
                 headers: {
@@ -58,7 +58,7 @@ class MySwipes extends React.Component{
                 }})
             .then(response => response.json())
             .then(data => {
-                this.setState({cards: data.entries})
+                this.setState({giving: data.giving, receiving: data.receiving})
             }).catch(x => {
             console.log('no data', x)
             return('no data')
@@ -68,6 +68,8 @@ class MySwipes extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            receiving: [],
+            giving: [],
             cards:[],
             filters: {
                 carmichael: true,
@@ -100,7 +102,7 @@ class MySwipes extends React.Component{
         const {userVerified, userEmail} = this.props;
         const {location, time, id} = theCardInfo;
         return(
-            <Card key={id + location} style={{marginBottom:10}}>
+            <Card key={id + location + Math.random()} style={{marginBottom:10}}>
                 <CardContent>
                     <Typography variant='h5' align='left'>
                         {this.toPrettyLocationString(location)} - {this.toPrettyTimeString(time)}
@@ -119,7 +121,7 @@ class MySwipes extends React.Component{
                             } else {
                                 this.setState({showLoginMessage: true})
                             }
-                        }}>Request Meal</Button>
+                        }}>Remove Instance</Button>
                     </CardActions>
                 </div>
 
@@ -144,47 +146,31 @@ class MySwipes extends React.Component{
         return toReturn
     }
 
-    sameDay = (d1, d2) => {
-        console.log(d1, d2)
-        return d1.getFullYear() === d2.getFullYear() &&
-            d1.getMonth() === d2.getMonth() &&
-            d1.getDate() === d2.getDate();
-    }
-
-    addDays = (date, days) => {
-        const copy = new Date(Number(date))
-        copy.setDate(date.getDate() + days)
-        return copy
-    }
     cards(){
-        const {cards} = this.state;
-        let today = [];
-        let tomorrow = [];
-        let rest = [];
+        const {giving, receiving} = this.state;
         const filtersList = this.makeFilters();
-        const todayDate = new Date()
-        const tomorrowDate = this.addDays(todayDate, 1)
-        cards.forEach(x => {
-
-                if (filtersList.includes(x.location) && this.sameDay(todayDate, new Date(x.time))){
-                    today.push(this.makeCard(x))
-                } else if (filtersList.includes(x.location) && this.sameDay(tomorrowDate, new Date(x.time))){
-                    tomorrow.push(this.makeCard(x))
-                } else if (filtersList.includes(x.location)){
-                    rest.push(this.makeCard(x))
+        let givingL = [];
+        let receivingL = [];
+        giving.forEach(x => {
+                if (filtersList.includes(x.location)){
+                    givingL.push(this.makeCard(x))
                 }
+            }
+        );
 
+        receiving.forEach(x => {
+                if (filtersList.includes(x.location)){
+                    receivingL.push(this.makeCard(x))
+                }
             }
         );
 
         return (
             <div>
-                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5 }} key='mToday'>Meal swipes today</div>
-                {today.length === 0 ? this.makeUnavailableFiltersCard('mToday') : today}
-                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5}} key='mTom'>Meal swipes tomorrow</div>
-                {tomorrow.length === 0 ? this.makeUnavailableFiltersCard('mTomorrow') : tomorrow}
-                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5}} key='mBeyond'>Meal swipes beyond</div>
-                {rest.length === 0 ? this.makeUnavailableFiltersCard('mRest') : rest}
+                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5 }} key='mToday2'>Giving:</div>
+                {givingL.length === 0 ? this.makeUnavailableFiltersCard('mToday2') : givingL}
+                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5}} key='mTom2'>Receiving</div>
+                {receivingL.length === 0 ? this.makeUnavailableFiltersCard('mTomorrow2') : receivingL}
             </div>
         )
     }
@@ -196,7 +182,7 @@ class MySwipes extends React.Component{
             <div>
                 <Chip
                     className="chip"
-                    key='carm'
+                    key='carm2'
                     label='Carmichael'
                     clickable
                     color={carmichael ? 'primary' : 'default'}
@@ -206,7 +192,7 @@ class MySwipes extends React.Component{
                 />
                 <Chip
                     className="chip"
-                    key='dew'
+                    key='dew2'
                     label='Dewick'
                     clickable
                     color={dewick ? 'primary' : 'default'}
@@ -216,7 +202,7 @@ class MySwipes extends React.Component{
                 />
                 <Chip
                     className="chip"
-                    key='hodge'
+                    key='hodge2'
                     label='Hodgdon'
                     clickable
                     color={hodgdon ? 'primary' : 'default'}
@@ -302,119 +288,6 @@ class MySwipes extends React.Component{
                         </Button>
                     </DialogActions>
                 </Dialog>
-                <Dialog fullWidth open={showGiverForm} onClose={this.handleCloseGiverForm} aria-labelledby="form-dialog-title">
-                    <DialogTitle style={{fontSize: 100}} id="form-dialog-title">Give a mealswipe!</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please enter the information below:
-                        </DialogContentText>
-
-                    </DialogContent>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justify="space-around">
-                            <div>
-                                <InputLabel style={{marginTop: 17}} shrink htmlFor="age-label-placeholder">
-                                    Dining Hall
-                                </InputLabel>
-                                <Select
-                                    style={{width:220}}
-                                    shrink
-                                    value={enteredDiningHall}
-                                    onChange={e => this.setState({enteredDiningHall: e.target.value})}
-                                >
-                                    <MenuItem value='carmichael'>Carmichael</MenuItem>
-                                    <MenuItem value='dewick'>Dewick</MenuItem>
-                                    <MenuItem value='hodgdon'>Hodgdon</MenuItem>
-                                </Select>
-                            </div>
-                            <KeyboardDatePicker
-                                style={{fontsize: 20}}
-                                disableToolbar
-                                disablePast
-                                variant="inline"
-                                format="MM/dd/yyyy"
-                                margin="normal"
-                                id="date-picker-inline"
-                                label="Date"
-                                value={enteredDate}
-                                onChange={newDate => this.setState({enteredDate: newDate})}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                            />
-                            <KeyboardTimePicker
-                                margin="normal"
-                                id="time-picker"
-                                label="Time"
-                                value={enteredDate}
-                                onChange={newDate => this.setState({enteredDate: newDate})}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change time',
-                                }}
-                            />
-                        </Grid>
-                    </MuiPickersUtilsProvider>
-                    <DialogActions>
-                        <Button onClick={this.handleCloseGiverForm} color="primary">
-                            Cancel
-                        </Button>
-                        <Button disabled={!enteredDiningHall} onClick={() => {
-                            const body = {
-                                giver_email: userEmail,
-                                location: enteredDiningHall,
-                                time: enteredDate
-                            };
-                            fetch('https://swipeshareapi.herokuapp.com/addentry',
-                                {method:'POST',
-                                    body:JSON.stringify(body),
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    }})
-                                .then(response => response.status)
-                                .then(status => {
-                                    if (status === 200){
-                                        this.handleCloseGiverForm()
-                                        this.requestCards()
-                                        this.setState({
-                                            enteredDiningHall: '',
-                                            time: new Date()
-                                        })
-                                    } else {
-                                        console.log('big bad')
-                                    }
-                                }).catch(x => {
-                                console.log('no data', x)
-                                return('no data')
-                            })
-                        }} color="primary">
-                            Submit
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-                <Snackbar
-                    variant="error"
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
-                    open={showLoginMessage}
-                    onClose={() => this.setState({showLoginMessage: false})}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    autoHideDuration={2000}
-                    message={<span id="message-id">Please log in first!</span>}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="close"
-                            color="inherit"
-                            onClick={() => this.setState({showLoginMessage: false})}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                />
             </div>
         )
     }
