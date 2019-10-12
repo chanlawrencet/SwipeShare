@@ -85,6 +85,7 @@ class Cards extends React.Component{
     makeCard(theCardInfo){
         const {userVerified, userEmail, showLoginM} = this.props;
         const {location, time, id} = theCardInfo;
+        console.log('location', location)
         return(
             <Card key={id} style={{marginBottom:10}}>
                 <CardContent>
@@ -208,7 +209,7 @@ class Cards extends React.Component{
                     <DialogTitle id="alert-dialog-title">Please confirm your request</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            You're agreeing to a meal at {this.toPrettyLocationString(selectedLocation)} at {this.toPrettyTimeString(selectedTime)}
+                            You're agreeing to a meal at {selectedLocation ? this.toPrettyLocationString(selectedLocation) : null } at {this.toPrettyTimeString(selectedTime)}
                         </DialogContentText>
                         <DialogContentText id="alert-dialog-description2">
                             You will receive an email alert as a reminder.
