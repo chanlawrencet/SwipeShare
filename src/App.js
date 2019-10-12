@@ -212,8 +212,6 @@ class App extends React.Component{
                 {showLogin ? this.loginWindow() : null}
                 <br/>
                 <br/>
-                <br/>
-                <br/>
                 <Cards userVerified={userVerified} userEmail={userEmail} showLoginM={() => this.setState({showLoginMessage: true})}/>
                 <Snackbar
                     variant="error"
@@ -226,7 +224,7 @@ class App extends React.Component{
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    autoHideDuration={6000}
+                    autoHideDuration={2000}
                     message={<span id="message-id">Not a @tufts.edu address!</span>}
                     action={[
                         <IconButton
@@ -250,7 +248,7 @@ class App extends React.Component{
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    autoHideDuration={6000}
+                    autoHideDuration={2000}
                     message={<span id="message-id">Check your email for a code!</span>}
 
                     action={[
@@ -270,36 +268,12 @@ class App extends React.Component{
                         vertical: 'bottom',
                         horizontal: 'center',
                     }}
-                    open={showLoginMessage}
-                    onClose={() => this.setState({showLoginMessage: false})}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    autoHideDuration={6000}
-                    message={<span id="message-id">Please log in first!</span>}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="close"
-                            color="inherit"
-                            onClick={() => this.setState({showLoginMessage: false})}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                />
-                <Snackbar
-                    variant="error"
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
                     open={showInvalidCode}
                     onClose={() => this.setState({showInvalidCode: false})}
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    autoHideDuration={6000}
+                    autoHideDuration={2000}
                     message={<span id="message-id">Invalid Code!</span>}
                     action={[
                         <IconButton

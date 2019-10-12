@@ -12,6 +12,9 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close"
 import MenuItem from "@material-ui/core/MenuItem";
 import {
     MuiPickersUtilsProvider,
@@ -21,12 +24,14 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import Grid from "@material-ui/core/Grid";
 
+// https://codewithhugo.com/add-date-days-js/
+// https://stackoverflow.com/questions/43855166/how-to-tell-if-two-dates-are-in-the-same-day
 
 class Cards extends React.Component{
 
     toPrettyTimeString = time => {
         const theDate = new Date(time);
-        const timeString = theDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const timeString = theDate.toLocaleTimeString([], {month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit'});
         let finalString = timeString;
         if (timeString.charAt(0) === '0'){
             finalString = timeString.slice(1);
@@ -71,24 +76,13 @@ class Cards extends React.Component{
         }
 
     }
-    makeUnavailableCard(){
-        return(
-            <Card key='unavailable' style={{marginBottom:10}}>
-                <CardContent>
-                    <Typography variant='h6' align='center'>
-                        No meals available at this time
-                    </Typography>
-                </CardContent>
-            </Card>
-        )
-    }
 
-    makeUnavailableFiltersCard(){
+    makeUnavailableFiltersCard(theKey){
         return(
-            <Card key='unavailable' style={{marginBottom:10}}>
+            <Card key={theKey} style={{marginBottom:10}}>
                 <CardContent>
                     <Typography variant='h6' align='center'>
-                        No meals available at this time for your selected filters.
+                        No meals available at this time for this time and filters.
                     </Typography>
                 </CardContent>
             </Card>
@@ -99,9 +93,9 @@ class Cards extends React.Component{
         const {userVerified, userEmail} = this.props;
         const {location, time, id} = theCardInfo;
         return(
-            <Card key={id} style={{marginBottom:10}}>
+            <Card key={id + location} style={{marginBottom:10}}>
                 <CardContent>
-                    <Typography variant='h5' align='left' style={{marginLeft:'5%'}}>
+                    <Typography variant='h5' align='left'>
                         {this.toPrettyLocationString(location)} - {this.toPrettyTimeString(time)}
                     </Typography>
                 </CardContent>
@@ -112,6 +106,7 @@ class Cards extends React.Component{
                                 console.log('good')
                                 this.setState({
                                     selectedID: id.toString(),
+                                    selectedTime: time,
                                     showConfirmation: true
                                 })
                             } else {
@@ -141,21 +136,50 @@ class Cards extends React.Component{
 
         return toReturn
     }
+
+    sameDay = (d1, d2) => {
+        console.log(d1, d2)
+        return d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth() &&
+            d1.getDate() === d2.getDate();
+    }
+
+    addDays = (date, days) => {
+        const copy = new Date(Number(date))
+        copy.setDate(date.getDate() + days)
+        return copy
+    }
     cards(){
         const {cards} = this.state;
-        let toReturn = [];
+        let today = [];
+        let tomorrow = [];
+        let rest = [];
         const filtersList = this.makeFilters();
+        const todayDate = new Date()
+        const tomorrowDate = this.addDays(todayDate, 1)
         cards.forEach(x => {
-                if (filtersList.includes(x.location)){
-                    toReturn.push(this.makeCard(x))}
+
+                if (filtersList.includes(x.location) && this.sameDay(todayDate, new Date(x.time))){
+                    today.push(this.makeCard(x))
+                } else if (filtersList.includes(x.location) && this.sameDay(tomorrowDate, new Date(x.time))){
+                    tomorrow.push(this.makeCard(x))
+                } else if (filtersList.includes(x.location)){
+                    rest.push(this.makeCard(x))
+                }
+
             }
         );
 
-        if (toReturn.length === 0){
-            return this.makeUnavailableFiltersCard()
-
-        }
-        return toReturn
+        return (
+            <div>
+                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5 }} key='mToday'>Meal swipes today</div>
+                {today.length === 0 ? this.makeUnavailableFiltersCard('mToday') : today}
+                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5}} key='mTom'>Meal swipes tomorrow</div>
+                {tomorrow.length === 0 ? this.makeUnavailableFiltersCard('mTomorrow') : tomorrow}
+                <div style={{fontSize: 30, textAlign: 'left', paddingBottom:5}} key='mBeyond'>Meal swipes beyond</div>
+                {rest.length === 0 ? this.makeUnavailableFiltersCard('mRest') : rest}
+            </div>
+        )
     }
 
     showOptions(){
@@ -207,9 +231,8 @@ class Cards extends React.Component{
 
 
     render() {
-        const {enteredDate, enteredDiningHall, cards, showConfirmation, showGiverForm, selectedID, selectedLocation, selectedTime} = this.state;
+        const {showLoginMessage, enteredDate, enteredDiningHall, cards, showConfirmation, showGiverForm, selectedID, selectedLocation, selectedTime} = this.state;
         const {userEmail, userVerified} = this.props
-
         return(
             <div style={{marginLeft:'15%', marginRight: '15%'}}>
                 <Button  variant='contained' onClick={() => {
@@ -220,11 +243,10 @@ class Cards extends React.Component{
                     }
                     this.setState({showGiverForm: true}
                     )}}>Give a swipe</Button>
-
-                <div style={{fontSize:30, textAlign:'left', marginBottom:10}}>Available Meal Swipes:</div>
-                {this.showOptions()}
                 <br/>
-                {cards.length === 0 ? this.makeUnavailableCard() : this.cards()}
+                <br/>
+                {this.showOptions()}
+                {this.cards()}
                 <Dialog
                     open={showConfirmation}
                     onClose={() => this.setState({showConfirmation: false})}
@@ -285,7 +307,7 @@ class Cards extends React.Component{
                         <Grid container justify="space-around">
                             <div>
                                 <InputLabel style={{marginTop: 17}} shrink htmlFor="age-label-placeholder">
-                                    Age
+                                    Dining Hall
                                 </InputLabel>
                                 <Select
                                     style={{width:220}}
@@ -329,7 +351,7 @@ class Cards extends React.Component{
                         <Button onClick={this.handleCloseGiverForm} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={() => {
+                        <Button disabled={!enteredDiningHall} onClick={() => {
                             const body = {
                                 giver_email: userEmail,
                                 location: enteredDiningHall,
@@ -346,6 +368,10 @@ class Cards extends React.Component{
                                     if (status === 200){
                                         this.handleCloseGiverForm()
                                         this.requestCards()
+                                        this.setState({
+                                            enteredDiningHall: '',
+                                            time: new Date()
+                                        })
                                     } else {
                                         console.log('big bad')
                                     }
@@ -358,6 +384,30 @@ class Cards extends React.Component{
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <Snackbar
+                    variant="error"
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    open={showLoginMessage}
+                    onClose={() => this.setState({showLoginMessage: false})}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    autoHideDuration={2000}
+                    message={<span id="message-id">Please log in first!</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="close"
+                            color="inherit"
+                            onClick={() => this.setState({showLoginMessage: false})}
+                        >
+                            <CloseIcon />
+                        </IconButton>,
+                    ]}
+                />
             </div>
         )
     }
