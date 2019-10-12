@@ -57,7 +57,7 @@ class AddEntry(Resource):
     def post(self):
         new_entry = {
             "giver_email": request.json['giver_email'],
-            "receiver_email": request.json['receiver_email'],
+            "receiver_email": "",
             "location": request.json['location'],
             "time": request.json['time']
         }

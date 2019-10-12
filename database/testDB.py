@@ -54,9 +54,9 @@ def getEntries():
     contents = list(mongo.db.entries.find())
     returnList = []
     for content in contents:
+        print(content)
         if content['receiver_email'] == '':
-            ele = {'giver_email': content['giver_email'], 
-                   'receiver_email': content['receiver_email'],
+            ele = {'id': str(content['_id']), 
                    'location': content['location'],
                    'time': content['time']}
             returnList.append(ele)
