@@ -53,8 +53,7 @@ class Cards extends React.Component{
                 dewick: true,
                 hodgdon: true
             },
-            selectedLocation: '',
-            selectedTime: null,
+            selectedID: '',
             showConfirmation: false,
         }
 
@@ -85,9 +84,9 @@ class Cards extends React.Component{
 
     makeCard(theCardInfo){
         const {userVerified, userEmail, showLoginM} = this.props;
-        const {location, time} = theCardInfo;
+        const {location, time, id} = theCardInfo;
         return(
-            <Card key={location+time+Math.random()} style={{marginBottom:10}}>
+            <Card key={id} style={{marginBottom:10}}>
                 <CardContent>
                     <Typography variant='h5' align='left' style={{marginLeft:'5%'}}>
                         {this.toPrettyLocationString(location)} - {this.toPrettyTimeString(time)}
@@ -99,8 +98,7 @@ class Cards extends React.Component{
                             if (userVerified && userEmail !== ''){
                                 console.log('good')
                                 this.setState({
-                                    selectedLocation: location,
-                                    selectedTime: time,
+                                    selectedID: id.toString(),
                                     showConfirmation: true
                                 })
                             } else {
@@ -192,8 +190,8 @@ class Cards extends React.Component{
     }
 
     render() {
-        const {cards, showConfirmation, selectedLocation, selectedTime} = this.state;
-        console.log(this.props)
+        const {cards, showConfirmation, selectedID, selectedLocation, selectedTime} = this.state;
+        const {userEmail} = this.props
 
         return(
             <div style={{marginLeft:'15%', marginRight: '15%'}}>
@@ -220,7 +218,30 @@ class Cards extends React.Component{
                         <Button onClick={() => this.setState({showConfirmation: false})} color="primary">
                             Back
                         </Button>
-                        <Button onClick={() => this.setState({showConfirmation: false})} color="primary" autoFocus>
+                        <Button onClick={() => {
+                            const body = {
+                                id: selectedID,
+                                receiver_email: userEmail
+                            };
+                            fetch('https://swipeshareapi.herokuapp.com/makerequest',
+                                {method:'POST',
+                                    body:JSON.stringify(body),
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }})
+                                .then(response => response.status)
+                                .then(status => {
+                                    if (status !== 200){
+                                        console.log('big bad')
+                                    } else {
+                                        console.log('success')
+                                    }
+                                }).catch(x => {
+                                console.log('no data', x)
+                                return('no data')
+                            })
+                            this.setState({showConfirmation: false})
+                        }} color="primary" autoFocus>
                             Confirm
                         </Button>
                     </DialogActions>
