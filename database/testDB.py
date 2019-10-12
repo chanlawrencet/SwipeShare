@@ -75,6 +75,12 @@ def modifyEntry(entry, receiver):
 
     return
 
+def deleteUsers():
+    entries = mongo.db.users
+    entries.remove()
+
+    return
+
 def deleteEntries():
     entries = mongo.db.entries
     entries.remove()

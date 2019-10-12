@@ -74,6 +74,11 @@ class FindEntry(Resource):
 
 class DeleteEntries(Resource):
     def post(self):
+        testDB.deleteUsers()
+        return
+
+class DeleteEntries(Resource):
+    def post(self):
         testDB.deleteEntries()
         return
 
@@ -83,6 +88,7 @@ api.add_resource(GetUsers, '/getusers')
 api.add_resource(GetEntries, '/')
 api.add_resource(AddEntry, '/addentry')
 api.add_resource(FindEntry, '/findentry')
+api.add_resource(DeleteUsers, '/deleteusers')
 api.add_resource(DeleteEntries, '/deleteentries')
 
 if __name__ == '__main__':
