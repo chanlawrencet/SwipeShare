@@ -328,6 +328,7 @@ class App extends React.Component{
                         </IconButton>,
                     ]}
                 />
+                <div style={{marginTop: 30}}>Made with <span role="img" aria-label='heart'>❤️</span>at Polyhack 2019</div>
             </div>
         );
     }
