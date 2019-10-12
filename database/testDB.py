@@ -10,6 +10,8 @@ app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app)
 
 def makeRequest(targetID, email):
+    print('email:')
+    print(str(email))
     writeR = mongo.db.entries.update({"_id": targetID}, {'$set': {"receiver_email" : str(email)}})
 
     return "200", 200
