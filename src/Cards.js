@@ -12,7 +12,7 @@ class Cards extends React.Component{
         this.setState({
             cards: []
         });
-        var request = new Request('https://swipeshare.herokuapp.com/', {method:'GET'});
+        var request = new Request('https://swipeshareapi.herokuapp.com/', {method:'GET'});
         fetch(request)
             .then(response => response.json())
             .then(data => {
