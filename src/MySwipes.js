@@ -10,19 +10,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Snackbar from "@material-ui/core/Snackbar";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close"
-import MenuItem from "@material-ui/core/MenuItem";
-import {
-    MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker,
-} from '@material-ui/pickers';
-import DateFnsUtils from "@date-io/date-fns";
-import Grid from "@material-ui/core/Grid";
 
 // https://codewithhugo.com/add-date-days-js/
 // https://stackoverflow.com/questions/43855166/how-to-tell-if-two-dates-are-in-the-same-day
@@ -225,8 +212,8 @@ class MySwipes extends React.Component{
 
 
     render() {
-        const {showLoginMessage, enteredDate, enteredDiningHall, cards, showConfirmation, showGiverForm, selectedID, selectedLocation, selectedTime} = this.state;
-        const {userEmail, userVerified} = this.props
+        const {showConfirmation, selectedID, selectedLocation, selectedTime} = this.state;
+        const {userVerified} = this.props
         return(
             <div style={{marginLeft:'15%', marginRight: '15%'}}>
                 <Button  variant='contained' onClick={() => {
@@ -263,9 +250,8 @@ class MySwipes extends React.Component{
                         <Button onClick={() => {
                             const body = {
                                 id: selectedID,
-                                receiver_email: userEmail
                             };
-                            fetch('https://swipeshareapi.herokuapp.com/makerequest',
+                            fetch('https://swipeshareapi.herokuapp.com/deleteentry',
                                 {method:'POST',
                                     body:JSON.stringify(body),
                                     headers: {

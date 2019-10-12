@@ -230,7 +230,7 @@ class Cards extends React.Component{
 
 
     render() {
-        const {showLoginMessage, enteredDate, enteredDiningHall, cards, showConfirmation, showGiverForm, selectedID, selectedLocation, selectedTime} = this.state;
+        const {showLoginMessage, enteredDate, enteredDiningHall, showConfirmation, showGiverForm, selectedID, selectedLocation, selectedTime} = this.state;
         const {userEmail, userVerified} = this.props
         return(
             <div style={{marginLeft:'15%', marginRight: '15%'}}>

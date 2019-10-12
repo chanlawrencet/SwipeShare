@@ -6,21 +6,6 @@ import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close"
 import MySwipes from "./MySwipes";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import {
-    MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker,
-} from '@material-ui/pickers';
-import DateFnsUtils from "@date-io/date-fns";
-import Grid from "@material-ui/core/Grid";
 import Cards from './Cards'
 import cookie from 'react-cookies'
 
@@ -195,7 +180,7 @@ class App extends React.Component{
     };
 
     render(){
-        const {userVerified, userEmail, showHome, showLogin, showInvalidCode, showLoginMessage, showInvalidMessage, showSuccessMessage, showGiverForm, enteredDiningHall} = this.state;
+        const {userVerified, userEmail, showHome, showLogin, showInvalidCode, showInvalidMessage, showSuccessMessage} = this.state;
         console.log(userVerified, userEmail)
         return (
             <div className="App">
