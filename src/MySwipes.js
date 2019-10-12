@@ -204,7 +204,7 @@ class MySwipes extends React.Component{
 
     componentDidMount() {
         this.requestCards()
-        setInterval(this.requestCards, 10000)
+        setInterval(this.requestCards, 3000)
     }
     handleCloseGiverForm = () => {
         this.setState({showGiverForm: false})
