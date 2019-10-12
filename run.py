@@ -53,6 +53,12 @@ class GetEntries(Resource):
     def get(self):
         return {'entries': testDB.getEntries()}
 
+class MakeRequest(Resource):
+    def post(self):
+        targetID = request.json['id']
+        receiver_email = request.json['receiver_email']
+        testDB.makeRequest(targetID, receiver_email)
+
 class AddEntry(Resource):
     def post(self):
         new_entry = {
@@ -91,6 +97,7 @@ api.add_resource(SendCode, '/sendcode')
 api.add_resource(GetUsers, '/getusers')
 api.add_resource(GetEntries, '/')
 api.add_resource(AddEntry, '/addentry')
+api.add_resource(MakeRequest, '/makerequest')
 api.add_resource(FindEntry, '/findentry')
 api.add_resource(DeleteUsers, '/deleteusers')
 api.add_resource(DeleteEntries, '/deleteentries')
