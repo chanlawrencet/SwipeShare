@@ -62,6 +62,7 @@ def getUserSwipes(email):
     allReceiving = []
     for content in allReceivingC:
         ele = {
+            'id': str(content['_id']), 
             'location': content['location'],
             'time': content['time']
         }
