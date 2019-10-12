@@ -101,6 +101,7 @@ class MySwipes extends React.Component{
     makeCard(theCardInfo){
         const {userVerified, userEmail} = this.props;
         const {location, time, id} = theCardInfo;
+        console.log(theCardInfo)
         return(
             <Card key={id + location + Math.random()} style={{marginBottom:10}}>
                 <CardContent>
@@ -246,13 +247,13 @@ class MySwipes extends React.Component{
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">Please confirm your request</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">Please confirm your removal</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            You're agreeing to a meal at {selectedLocation ? this.toPrettyLocationString(selectedLocation) : null } at {this.toPrettyTimeString(selectedTime)}
+                            You're deleting a meal at {selectedLocation ? this.toPrettyLocationString(selectedLocation) : null } at {this.toPrettyTimeString(selectedTime)}
                         </DialogContentText>
                         <DialogContentText id="alert-dialog-description2">
-                            You will receive an email alert as a reminder.
+                            You and any impacted users will receive an email alert as a notification.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -284,7 +285,7 @@ class MySwipes extends React.Component{
                             })
                             this.setState({showConfirmation: false})
                         }} color="primary" autoFocus>
-                            Confirm
+                            Remove
                         </Button>
                     </DialogActions>
                 </Dialog>
