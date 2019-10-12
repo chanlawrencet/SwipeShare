@@ -11,10 +11,9 @@ mongo = PyMongo(app)
 
 def makeRequest(targetID, email):
     writeR = mongo.db.entries.update({"_id": targetID}, {'$set': {"receiver_email" : str(email)}})
-    if (writeR.nMatched == 1):
-        return "200", 200
-    else:
-        return "500", 500
+
+    return "200", 200
+
         
 def verify(email, code):
     users = mongo.db.users
