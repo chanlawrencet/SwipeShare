@@ -49,6 +49,26 @@ def updateUser(email):
     
     return code
 
+def getUserSwipes(email):
+    allGivingC = list(mongo.db.entries.find({"giver_email" : email}).sort('time', 1))
+    allGiving = []
+    for content in allGivingC:
+        ele = {
+            'location': content['location'],
+            'time': content['time']
+        }
+        allGiving.append(ele)
+    allReceivingC = list(mongo.db.entries.find({"receiver_email" : email}).sort('time', 1))
+    allReceiving = []
+    for content in allReceiving:
+        ele = {
+            'location': content['location'],
+            'time': content['time']
+        }
+        allReceiving.append(ele)
+
+    return allGiving, allReceiving
+
 def getUsers():
     contents = list(mongo.db.users.find())
     returnList = []

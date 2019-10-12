@@ -49,6 +49,16 @@ class GetUsers(Resource):
     def get(self):
         return {'users': testDB.getUsers()}
 
+class GetUserSwipes(Resource):
+    def post(self):
+        email = request.json['email']
+        (giving, receiving) = testDB.getUserSwipes(email)
+        toReturn = {
+            'giving': giving,
+            'receiving': receiving
+        }
+        return toReturn
+
 class GetEntries(Resource):
     def get(self):
         return {'entries': testDB.getEntries()}
@@ -95,6 +105,7 @@ class DeleteEntries(Resource):
 api.add_resource(LogIn, '/login')
 api.add_resource(SendCode, '/sendcode')
 api.add_resource(GetUsers, '/getusers')
+api.add_resource(GetUserSwipes, '/getuserswipes')
 api.add_resource(GetEntries, '/')
 api.add_resource(AddEntry, '/addentry')
 api.add_resource(MakeRequest, '/makerequest')
