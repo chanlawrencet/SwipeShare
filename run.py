@@ -1,7 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse, abort
-from flask_mail import Mail
-from flask_mail import Message
 from flask_cors import CORS
 from database import testDB
 from sendgrid import SendGridAPIClient
