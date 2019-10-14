@@ -3,6 +3,8 @@ from flask_pymongo import PyMongo
 import os
 import random
 from bson.objectid import ObjectId
+import datetime
+import pytz
 
 app = Flask(__name__)
 MONGO_URL = os.environ.get('MONGODB_URI')
@@ -86,11 +88,16 @@ def getUsers():
     return returnList
 
 def getEntries():
+    currentTimeUnknown = datetime.datetime.now()
+    timezone = pytz.timezone("America/New_York")
+    currentTimeKnown = timezone.localize(currentTimeUnknown)
+    currentTimeString = str(known.isoformat()[:23]) + 'Z'
+
     contents = list(mongo.db.entries.find().sort('time', 1))
     returnList = []
     for content in contents:
         print(content)
-        if content['receiver_email'] == '':
+        if currentTimeString >= content['time'] and content['receiver_email'] == '':
             ele = {'id': str(content['_id']), 
                    'location': content['location'],
                    'time': content['time']}
