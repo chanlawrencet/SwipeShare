@@ -9,6 +9,8 @@ import MySwipes from "./MySwipes";
 import Cards from './Cards'
 import cookie from 'react-cookies'
 import jumbo from './jumbo.gif'
+import github from './github.svg'
+import githubWord from './githubword.svg'
 
 class App extends React.Component{
     constructor(props){
@@ -26,7 +28,8 @@ class App extends React.Component{
             showInvalidCode: false,
             showCodeField: true,
             enteredDiningHall: '',
-            showHome: true
+            showHome: true,
+            showInfoMessage: false,
         };
     }
 
@@ -181,7 +184,7 @@ class App extends React.Component{
     };
 
     render(){
-        const {userVerified, userEmail, showHome, showLogin, showInvalidCode, showInvalidMessage, showSuccessMessage} = this.state;
+        const {showInfoMessage, userVerified, userEmail, showHome, showLogin, showInvalidCode, showInvalidMessage, showSuccessMessage} = this.state;
         console.log(userVerified, userEmail)
         return (
             <div className="App">
@@ -288,6 +291,14 @@ class App extends React.Component{
                     ]}
                 />
                 <div style={{marginTop: 30}}>Made with <span role="img" aria-label='heart'>❤️</span>at Polyhack 2019</div>
+                <br/>
+                <a href={'https://github.com/chanlawrencet/swipeshare'}
+                   onMouseEnter={() => this.setState({showInfoMessage: true})}
+                   onMouseLeave={() => this.setState({showInfoMessage: false})}>
+                    <img src={github} style={{marginRight:5}}/>
+                    <img src={githubWord}/>
+                </a>
+                {showInfoMessage? <div style={{fontSize:10}}>Repo and info!</div>: <div/>}
             </div>
         );
     }
