@@ -61,7 +61,9 @@ class MySwipes extends React.Component{
             filters: {
                 carmichael: true,
                 dewick: true,
-                hodgdon: true
+                hodgdon: true,
+                past: true,
+                future: true,
             },
             selectedID: '',
             showConfirmation: false,
@@ -87,13 +89,13 @@ class MySwipes extends React.Component{
 
     makeCard(theCardInfo){
         const {userVerified, userEmail} = this.props;
-        const {location, time, id} = theCardInfo;
+        const {location, time, id, past} = theCardInfo;
         console.log(theCardInfo)
         return(
             <Card key={id + location + Math.random()} style={{marginBottom:10}}>
                 <CardContent>
                     <Typography variant='h5' align='left'>
-                        {this.toPrettyLocationString(location)} - {this.toPrettyTimeString(time)}
+                        {this.toPrettyLocationString(location)} - {this.toPrettyTimeString(time)} - {past ? 'Past' : 'Future'}
                     </Typography>
                 </CardContent>
                 <div>
@@ -136,19 +138,22 @@ class MySwipes extends React.Component{
 
     cards(){
         const {giving, receiving} = this.state;
+        const {past, future} = this.state.filters
         const filtersList = this.makeFilters();
         let givingL = [];
         let receivingL = [];
         giving.forEach(x => {
                 if (filtersList.includes(x.location)){
-                    givingL.push(this.makeCard(x))
+                    if ((past && x.past) || (future && !x.past))
+                        givingL.push(this.makeCard(x))
                 }
             }
         );
 
         receiving.forEach(x => {
                 if (filtersList.includes(x.location)){
-                    receivingL.push(this.makeCard(x))
+                    if ((past && x.past) || (future && !x.past))
+                        receivingL.push(this.makeCard(x))
                 }
             }
         );
@@ -165,7 +170,7 @@ class MySwipes extends React.Component{
 
     showOptions(){
         const {filters} = this.state;
-        const {carmichael, dewick, hodgdon} = filters;
+        const {carmichael, dewick, hodgdon, past, future} = filters;
         return(
             <div>
                 <Chip
@@ -175,7 +180,7 @@ class MySwipes extends React.Component{
                     clickable
                     color={carmichael ? 'primary' : 'default'}
                     onClick={() => this.setState({filters: {
-                            carmichael: !carmichael, dewick: dewick, hodgdon: hodgdon
+                            carmichael: !carmichael, dewick: dewick, hodgdon: hodgdon, past: past, future: future
                         }})}
                 />
                 <Chip
@@ -185,7 +190,7 @@ class MySwipes extends React.Component{
                     clickable
                     color={dewick ? 'primary' : 'default'}
                     onClick={() => this.setState({filters: {
-                            carmichael: carmichael, dewick: !dewick, hodgdon: hodgdon
+                            carmichael: carmichael, dewick: !dewick, hodgdon: hodgdon, past: past, future: future
                         }})}
                 />
                 <Chip
@@ -195,7 +200,27 @@ class MySwipes extends React.Component{
                     clickable
                     color={hodgdon ? 'primary' : 'default'}
                     onClick={() => this.setState({filters: {
-                            carmichael: carmichael, dewick: dewick, hodgdon: !hodgdon
+                            carmichael: carmichael, dewick: dewick, hodgdon: !hodgdon, past: past, future: future
+                        }})}
+                />
+                <Chip
+                    className="chip"
+                    key='past'
+                    label='Past'
+                    clickable
+                    color={past ? 'primary' : 'default'}
+                    onClick={() => this.setState({filters: {
+                            carmichael: carmichael, dewick: dewick, hodgdon: hodgdon, past: !past, future: future
+                        }})}
+                />
+                <Chip
+                    className="chip"
+                    key='future'
+                    label='Future'
+                    clickable
+                    color={future ? 'primary' : 'default'}
+                    onClick={() => this.setState({filters: {
+                            carmichael: carmichael, dewick: dewick, hodgdon: hodgdon, past: past, future: !future
                         }})}
                 />
             </div>
