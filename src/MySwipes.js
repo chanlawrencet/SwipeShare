@@ -241,8 +241,6 @@ class MySwipes extends React.Component{
         const {userVerified} = this.props
         return(
             <div style={{marginLeft:'15%', marginRight: '15%'}}>
-                <br/>
-                <br/>
                 {this.showOptions()}
                 {this.cards()}
                 <Dialog
