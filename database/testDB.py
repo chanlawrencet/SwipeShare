@@ -67,7 +67,7 @@ def getUserSwipes(email):
     allGivingC = list(mongo.db.entries.find({"giver_email" : email}).sort('time', 1))
     allGiving = []
     for content in allGivingC:
-        if currentTimeString <= content['time']
+        if currentTimeString <= content['time']:
             ele = {
                 'id': str(content['_id']), 
                 'location': content['location'],
@@ -86,7 +86,7 @@ def getUserSwipes(email):
     allReceivingC = list(mongo.db.entries.find({"receiver_email" : email}).sort('time', 1))
     allReceiving = []
     for content in allReceivingC:
-        if currentTimeString <= content['time']
+        if currentTimeString <= content['time']:
             ele = {
                 'id': str(content['_id']), 
                 'location': content['location'],
