@@ -1,4 +1,4 @@
-# Swipe Share
+# Swipe Share (in development)
 A way to share your extra meal swipes with those who need them most
 
 Developed first at Tufts Polyhack Hackathon 2019
@@ -18,6 +18,13 @@ Unfortunately, this population also experiences a high amount of hunger, due to 
 Some universities, such as ours, has mealswipe systems set up, but cap the maximum amount to share at 4. 
 We wanted to push that number but not have to interface with existing university systems.
 Here came Swipe Share, a way for people with extra meal swipes to "swipe" people in to dining halls.
+
+## Stack
+- React
+- Flask
+- MongoDB
+
+Hosted on Heroku
 
 ## Usage
 At our university, we allow students on a meal plan (usually a set number, like 160) to swipe in other people.
