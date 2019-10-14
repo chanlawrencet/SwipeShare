@@ -46,3 +46,11 @@ a specific event, and a confirmation prompt ensues. The application then sends c
 This application is in an almost-production phase. It's almost done!
 
 ### Social
+We are unsure about the social implications of this service -- will people hog meals? Will there be massive confusion
+between meetups? There are plenty of questions concerning the social aspect of this service.
+
+### Improvements
+- Allow givers to check a few boxes detailing their giving. Do they want to just swipe and dash? Do they want a meal with their receiver?
+- More secure authentication
+- Email reminder system
+- Built-in messaging system to allow communication come time to give the swipe
