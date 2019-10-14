@@ -97,7 +97,7 @@ def getEntries():
     returnList = []
     for content in contents:
         print(content)
-        if currentTimeString >= content['time'] and content['receiver_email'] == '':
+        if currentTimeString <= content['time'] and content['receiver_email'] == '':
             ele = {'id': str(content['_id']), 
                    'location': content['location'],
                    'time': content['time']}
