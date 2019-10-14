@@ -57,24 +57,51 @@ def updateUser(email):
     return code
 
 def getUserSwipes(email):
+        currentTimeUnknown = datetime.datetime.now()
+    timezone = pytz.timezone("America/New_York")
+    currentTimeKnown = timezone.localize(currentTimeUnknown)
+    currentTimeString = str(currentTimeKnown.isoformat()[:23]) + 'Z'
+
+
+
     allGivingC = list(mongo.db.entries.find({"giver_email" : email}).sort('time', 1))
     allGiving = []
     for content in allGivingC:
-        ele = {
-            'id': str(content['_id']), 
-            'location': content['location'],
-            'time': content['time']
-        }
-        allGiving.append(ele)
+        if currentTimeString <= content['time']
+            ele = {
+                'id': str(content['_id']), 
+                'location': content['location'],
+                'time': content['time'],
+                'past': False
+            }
+            allGiving.append(ele)
+        else:
+            ele = {
+                'id': str(content['_id']), 
+                'location': content['location'],
+                'time': content['time'],
+                'past': True
+            }
+            allGiving.append(ele)
     allReceivingC = list(mongo.db.entries.find({"receiver_email" : email}).sort('time', 1))
     allReceiving = []
     for content in allReceivingC:
-        ele = {
-            'id': str(content['_id']), 
-            'location': content['location'],
-            'time': content['time']
-        }
-        allReceiving.append(ele)
+        if currentTimeString <= content['time']
+            ele = {
+                'id': str(content['_id']), 
+                'location': content['location'],
+                'time': content['time'],
+                'past': False
+            }
+            allReceiving.append(ele)
+        else:
+            ele = {
+                'id': str(content['_id']), 
+                'location': content['location'],
+                'time': content['time'],
+                'past': True
+            }
+            allGiving.append(ele)
 
     return allGiving, allReceiving
 
