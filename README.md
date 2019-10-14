@@ -36,4 +36,13 @@ A giving users can post an event by clicking the "give a swipe" button,
 where they are prompted to enter in corresponding information about their giving.
 
 ### Receiving
-All receiving users can receive a meal swipe by clicking the "request meal" butto, which is followed by a confirmation message.
+All receiving users can receive a meal swipe by clicking the "request meal" button, which is followed by a confirmation message.
+
+### My Swipes
+All users can view their "My Swipes" page, which displays all events, historical and future. They have the option to delete 
+a specific event, and a confirmation prompt ensues. The application then sends corresponding emails to those affected by the deletion (not yet implemented).
+
+## Future thoughts
+This application is in an almost-production phase. It's almost done!
+
+### Social
