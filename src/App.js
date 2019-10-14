@@ -290,7 +290,7 @@ class App extends React.Component{
                         </IconButton>,
                     ]}
                 />
-                <div style={{marginTop: 30}}>Made with<span style={{marginLeft:'2em', marginRight:'2em'}} role="img" aria-label='heart'>❤️</span>at Polyhack 2019</div>
+                <div style={{marginTop: 30}}>Made with<span style={{marginLeft:5, marginRight:5}} role="img" aria-label='heart'>❤️</span>at Polyhack 2019</div>
                 <br/>
                 <a href={'https://github.com/chanlawrencet/swipeshare'}
                    onMouseEnter={() => this.setState({showInfoMessage: true})}
