@@ -91,7 +91,7 @@ def getEntries():
     currentTimeUnknown = datetime.datetime.now()
     timezone = pytz.timezone("America/New_York")
     currentTimeKnown = timezone.localize(currentTimeUnknown)
-    currentTimeString = str(known.isoformat()[:23]) + 'Z'
+    currentTimeString = str(currentTimeKnown.isoformat()[:23]) + 'Z'
 
     contents = list(mongo.db.entries.find().sort('time', 1))
     returnList = []
