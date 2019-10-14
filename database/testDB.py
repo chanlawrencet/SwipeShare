@@ -57,7 +57,7 @@ def updateUser(email):
     return code
 
 def getUserSwipes(email):
-        currentTimeUnknown = datetime.datetime.now()
+    currentTimeUnknown = datetime.datetime.now()
     timezone = pytz.timezone("America/New_York")
     currentTimeKnown = timezone.localize(currentTimeUnknown)
     currentTimeString = str(currentTimeKnown.isoformat()[:23]) + 'Z'
