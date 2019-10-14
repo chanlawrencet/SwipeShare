@@ -10,6 +10,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContentText from "@material-ui/core/DialogContentText";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // https://codewithhugo.com/add-date-days-js/
 // https://stackoverflow.com/questions/43855166/how-to-tell-if-two-dates-are-in-the-same-day
@@ -34,6 +35,7 @@ class MySwipes extends React.Component{
 
     requestCards = () => {
         const {userEmail} = this.props;
+        const {loaded} = this.state;
         const body = {
             email: userEmail
         };
@@ -45,7 +47,12 @@ class MySwipes extends React.Component{
                 }})
             .then(response => response.json())
             .then(data => {
-                this.setState({giving: data.giving, receiving: data.receiving})
+                if (loaded){
+                    this.setState({giving: data.giving, receiving: data.receiving})
+                } else {
+                    this.setState({giving: data.giving, receiving: data.receiving, loaded: true})
+                }
+
             }).catch(x => {
             console.log('no data', x)
             return('no data')
@@ -71,6 +78,7 @@ class MySwipes extends React.Component{
             enteredDate: new Date(),
             showGiverForm: false,
             enteredDiningHall: '',
+            loaded:false,
         }
 
     }
@@ -237,12 +245,12 @@ class MySwipes extends React.Component{
 
 
     render() {
-        const {showConfirmation, selectedID, selectedLocation, selectedTime} = this.state;
+        const {loaded, showConfirmation, selectedID, selectedLocation, selectedTime} = this.state;
         const {userVerified} = this.props
         return(
             <div style={{marginLeft:'15%', marginRight: '15%'}}>
                 {this.showOptions()}
-                {this.cards()}
+                {loaded ? this.cards() : <CircularProgress style={{marginTop:10}}/>}
                 <Dialog
                     open={showConfirmation}
                     onClose={() => this.setState({showConfirmation: false})}

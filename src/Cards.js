@@ -16,6 +16,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close"
 import MenuItem from "@material-ui/core/MenuItem";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {
     MuiPickersUtilsProvider,
     KeyboardTimePicker,
@@ -46,11 +47,17 @@ class Cards extends React.Component{
 
 
     requestCards = () => {
+        const {loaded} = this.state
         var request = new Request('https://swipeshareapi.herokuapp.com/', {method:'GET'});
         fetch(request)
             .then(response => response.json())
             .then(data => {
-                this.setState({cards: data.entries})
+                if (loaded){
+                    this.setState({cards: data.entries})
+                } else {
+                    this.setState({cards: data.entries, loaded: true})
+                }
+
             }).catch(x => {
             console.log('no data', x)
             return('no data')
@@ -72,6 +79,7 @@ class Cards extends React.Component{
             enteredDate: new Date(),
             showGiverForm: false,
             enteredDiningHall: '',
+            loaded: false
         }
 
     }
@@ -230,7 +238,7 @@ class Cards extends React.Component{
 
 
     render() {
-        const {showLoginMessage, enteredDate, enteredDiningHall, showConfirmation, showGiverForm, selectedID, selectedLocation, selectedTime} = this.state;
+        const {loaded, showLoginMessage, enteredDate, enteredDiningHall, showConfirmation, showGiverForm, selectedID, selectedLocation, selectedTime} = this.state;
         const {userEmail, userVerified} = this.props
         return(
             <div style={{marginLeft:'15%', marginRight: '15%'}}>
@@ -245,7 +253,7 @@ class Cards extends React.Component{
                 <br/>
                 <br/>
                 {this.showOptions()}
-                {this.cards()}
+                {loaded ? this.cards() : <CircularProgress style={{marginTop:10}}/>}
                 <Dialog
                     open={showConfirmation}
                     onClose={() => this.setState({showConfirmation: false})}
